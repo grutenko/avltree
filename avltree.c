@@ -6,8 +6,10 @@ void AvlTree_init( AvlTree *tree )
   tree->root = NULL;
 }
 
-#define AVL_FIXED_HEIGHT(node) ((((node)->left ? (node)->left->height : 0) > ((node)->right ? (node)->right->height : 0) \
-    ? ((node)->left ? (node)->left->height : 0) : ((node)->right ? (node)->right->height : 0)) + 1)
+#define AVL_FIXED_HEIGHT(node) (( \
+  ((node)->left ? (node)->left->height : 0) > ((node)->right ? (node)->right->height : 0) \
+    ? ((node)->left ? (node)->left->height : 0) \
+    : ((node)->right ? (node)->right->height : 0)) + 1)
 
 #define AVL_BFACTOR(node) (((node)->right ? (node)->right->height : 0) - ((node)->left ? (node)->left->height : 0))
 
@@ -56,7 +58,7 @@ static struct _sAvlNode *__AvlTree_init_node( void *data )
     return NULL;
   }
   node->data = data;
-  node->height = 0;
+  node->height = 1;
   node->left = NULL;
   node->right = NULL;
   return node;
@@ -113,7 +115,7 @@ static struct _sAvlNode *__AvlTree_leftmost_node( struct _sAvlNode *node )
 {
   struct _sAvlNode *current = node;
   while( current->left ) {
-    current = node->left;
+    current = current->left;
   }
   return current;
 }
