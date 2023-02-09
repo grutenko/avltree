@@ -21,8 +21,6 @@ endif
 
 CC = /usr/bin/gcc
 TARGET = arm64-apple-darwin
-LD_INCLUDE_PATH =
-LIBS =
 CFLAGS = -O2 -Winline
 
 .PHONY: all
@@ -30,10 +28,10 @@ CFLAGS = -O2 -Winline
 all: test
 
 %.out:
-	$(CC) $(LD_INCLUDE_PATH) $(LIBS) -target $(TARGET) $(CFLAGS) -o $@ $^
+	$(CC) -target $(TARGET) $(CFLAGS) -o $@ $^
 
 %.$(OBJEXT): %.c
-	$(CC) -c $(LD_INCLUDE_PATH) -target $(TARGET) $(CFLAGS) $^ -o $@
+	$(CC) -c -target $(TARGET) $(CFLAGS) $^ -o $@
 
 .PHONY: test compile-test
 
@@ -42,13 +40,20 @@ test: compile-test
 
 compile-test: avltreetest.out
 
+.PHONY: bench compile-bench
+
+bench: compile-bench
+
+compile-bench: avltreebench.out
+
+avltreebench.out: avltreebench.$(OBJEXT) avltree.$(OBJEXT)
+
+%bench.out: %bench.$(OBJEXT)
+	$(CC) -target $(TARGET) $(CFLAGS) -o $@ $^
+
 avltreetest.out: avltreetest.$(OBJEXT) avltree.$(OBJEXT)
-
-%test.$(OBJEXT): LD_INCLUDE_PATH := $(LD_INCLUDE_PATH) $(shell pkg-config --cflags check)
-
-%test.out: LIBS := $(LIBS) $(shell pkg-config --libs check) -lm -lpthread
 %test.out: %test.$(OBJEXT)
-	$(CC) $(LD_INCLUDE_PATH) $(LIBS) -target $(TARGET) $(CFLAGS) -o $@ $^
+	$(CC) -target $(TARGET) $(CFLAGS) -o $@ $^
 
 .PHONY: clean clean-test
 
