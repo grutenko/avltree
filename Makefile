@@ -43,6 +43,7 @@ compile-test: avltreetest.out
 .PHONY: bench compile-bench
 
 bench: compile-bench
+	./avltreebench.out
 
 compile-bench: avltreebench.out
 

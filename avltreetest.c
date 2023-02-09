@@ -37,13 +37,11 @@ int main()
     AvlTreeIter it;
     AvlTree_iter_init( &it, &tree );
     for( j = 0, item = AvlTreeIter_next( &it ); item != NULL; j++, item = AvlTreeIter_next( &it ) ) {
-      printf("%c ", *(char *)item);
       if( *(char *)item != table[j] ) {
         fprintf( stderr, "Test Failure tree ordering.\n");
         return EXIT_FAILURE;
       }
     }
-    putc('\n', stdout);
   }
 
   for( i = 0; i < 48; i++ ) {
