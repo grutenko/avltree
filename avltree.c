@@ -1,4 +1,6 @@
+#include <assert.h>
 #include <stdlib.h>
+
 #include "avltree.h"
 
 void AvlTree_init( AvlTree *tree )
@@ -13,7 +15,7 @@ void AvlTree_init( AvlTree *tree )
 
 #define AVL_BFACTOR(node) (((node)->right ? (node)->right->height : 0) - ((node)->left ? (node)->left->height : 0))
 
-static inline struct _sAvlNode *__AvlTree_rotate_left( struct _sAvlNode *q )
+static struct _sAvlNode *__AvlTree_rotate_left( struct _sAvlNode *q )
 {
   struct _sAvlNode *p = q->right;
 	q->right = p->left;
@@ -23,7 +25,7 @@ static inline struct _sAvlNode *__AvlTree_rotate_left( struct _sAvlNode *q )
 	return p;
 }
 
-static inline struct _sAvlNode *__AvlTree_rotate_right( struct _sAvlNode *p )
+static struct _sAvlNode *__AvlTree_rotate_right( struct _sAvlNode *p )
 {
   struct _sAvlNode *q = p->left;
   p->left = q->right;
@@ -75,7 +77,7 @@ static struct _sAvlNode *__AvlTree_insert( struct _sAvlNode *node, void *data, A
     }
     return new_node;
   }
-  int cmp_result = cmp( node->data, data );
+  int32_t cmp_result = cmp( node->data, data );
   if( cmp_result >= 0 ) {
     node->left = __AvlTree_insert( node->left, data, cmp, err );
   } else {
@@ -86,7 +88,8 @@ static struct _sAvlNode *__AvlTree_insert( struct _sAvlNode *node, void *data, A
 
 int AvlTree_insert( AvlTree *tree, void *data, AvlTreeCmpFn cmp )
 {
-  int err = 0;
+  assert( data != NULL );
+  int32_t err = 0;
   tree->root = __AvlTree_insert( tree->root, data, cmp, &err );
   return err;
 }
@@ -135,7 +138,7 @@ static struct _sAvlNode *__AvlTree_delete(
   if( !node ) {
     return NULL;
   }
-  int cmp_result = cmp( node->data, key );
+  int32_t cmp_result = cmp( node->data, key );
   if( cmp_result > 0 ) {
     node->left = __AvlTree_delete( node->left, key, cmp, free_data );
   } else if( cmp_result < 0 ) {

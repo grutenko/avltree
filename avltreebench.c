@@ -1,16 +1,14 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stddef.h>
 #include <time.h>
 #include "avltree.h"
 
-inline static int cmp( void *data0, void *data1 )
+static int cmp( void *data0, void *data1 )
 {
   return *(int *)data0 > *(int *)data1 ? 1 : (*(int *)data0 == *(int *)data1 ? 0 : -1);
 }
 
 void free_data( void *data ) {}
-
-#define AVL_BFACTOR(node) (((node)->right ? (node)->right->height : 0) - ((node)->left ? (node)->left->height : 0))
 
 int main()
 {
